@@ -192,8 +192,8 @@ ANTI_SPAMBOT_SHOUT = sb(os.environ.get("ANTI_SPAMBOT_SHOUT", "False"))
 # Youtube API key
 YOUTUBE_API_KEY = os.environ.get("YOUTUBE_API_KEY", None)
 
-# Untuk Perintah .rosealive
-ROSE_TEKS_KUSTOM = os.environ.get("ROSE_TEKS_KUSTOM") or "**Hi I'am Alive...**"
+# Untuk Perintah .skyalive
+SKYLA_TEKS_KUSTOM = os.environ.get("SKYLA_TEKS_KUSTOM") or "**Hi I'am Alive...**"
 
 # Default .alive Name
 ALIVE_NAME = os.environ.get("ALIVE_NAME", None)
@@ -230,15 +230,15 @@ SUDO_HANDLER = os.environ.get("SUDO_HANDLER", r"$")
 
 # Support
 GROUP = os.environ.get("GROUP", "SkylaChats")
-CHANNEL = os.environ.get("CHANNEL", "")
+CHANNEL = os.environ.get("CHANNEL", "Xgrovy_id")
 
 # Default .alive Logo
 ALIVE_LOGO = os.environ.get(
-    "ALIVE_LOGO") or ""
+    "ALIVE_LOGO") or "https://telegra.ph/file/fc0dbed4ddceac4240589.jpg"
 
 # Default .helpme Logo
 INLINE_PIC = os.environ.get(
-    "INLINE_PIC") or ""
+    "INLINE_PIC") or "https://telegra.ph/file/b2dc33fdd56e3b58ee9c0.jpg"
 
 # Default emoji help
 EMOJI_HELP = os.environ.get("EMOJI_HELP") or "☃️"
