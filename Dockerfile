@@ -1,9 +1,23 @@
-FROM vckyouuu/geezprojects:buster
+# Using Python Slim-Buster
+FROM skyzuxzy/skyzu-userbot:buster
+#━━━━━ Userbot Telegram ━━━━━
+#━━━━━ By Skyla-Userbot ━━━━━
 
-RUN git clone -b Skyla-Userbot https://github.com/Cangcimenn/Skyla-Userbot  /home/userbot/ \
-    && chmod 777 /home/Skyla-Userbot \
-    && mkdir /home/Skyla-Userbot/bin/
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install ffmpeg -y
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs && \
+    npm i -g npm
+    
+RUN git clone -b Skyla-Userbot https://github.com/Cangcimenn/Skyla-Userbot /root/userbot
+RUN mkdir /root/userbot/.bin
+RUN pip install --upgrade pip setuptools
+WORKDIR /root/userbot
 
-WORKDIR /home/userbot/
+#Install python requirements
+RUN pip3 install -r https://raw.githubusercontent.com/Cangcimenn/Skyla-Userbot/Skyla-Userbot/requirements.txt
 
-CMD [ "bash", "start" ]
+EXPOSE 80 443
+
+# Finalization
+CMD ["python3", "-m", "userbot"]
