@@ -16,7 +16,6 @@ from userbot import (
     BOT_TOKEN,
     BOT_VER,
     LOGS,
-    grovyblacklist,
     bot,
     call_py,
 )
