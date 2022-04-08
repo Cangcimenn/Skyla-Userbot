@@ -2,25 +2,15 @@
 # FROM Man-Userbot <https://github.com/mrismanaziz/Man-Userbot>
 # t.me/SharingUserbot & t.me/Lunatic0de
 
-import shlex
-from typing import Tuple
 import asyncio
 import importlib
 import logging
 import sys
 from pathlib import Path
 from random import randint
-from base64 import b64decode
-from git import Repo
-from git.exc import GitCommandError, InvalidGitRepositoryError
 
 import heroku3
 from telethon.tl.functions.contacts import UnblockRequest
-from telethon.tl.functions.channels import (
-    CreateChannelRequest,
-    EditPhotoRequest,
-    EditAdminRequest
-)
 from telethon.tl.types import (
     ChatAdminRights,
 )
@@ -32,7 +22,6 @@ from userbot import (
     HEROKU_APP_NAME,
     LOGS,
     bot,
-    branch,
 )
 
 heroku_api = "https://api.heroku.com"
