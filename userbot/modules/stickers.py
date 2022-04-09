@@ -36,8 +36,11 @@ KANGING_STR = [
     "Sedang Mengambil Sticker Ini Ke Pack Anda",
     "Sedang Mengambil Sticker Ini Ke Pack Anda",
 ]
+
+
 def verify_cond(geezarray, text):
     return any(i in text for i in geezarray)
+
 
 async def delpack(xx, conv, cmd, args, packname):
     try:
@@ -54,6 +57,7 @@ async def delpack(xx, conv, cmd, args, packname):
     await conv.send_message("Yes, I am totally sure.")
     await conv.get_response()
     await args.client.send_read_acknowledge(conv.chat_id)
+
 
 async def newpacksticker(
     xx,
@@ -248,8 +252,7 @@ async def kang(args):
                         packnick = f"{custompack}"
                     else:
                         f_name = (
-                            f"@{user.username}" if user.username else user.first_name
-                        )
+                            f"@{user.username}" if user.username else user.first_name)
                         packname = f"Sticker_u{user.id}_Ke{pack}"
                         packnick = f"Sticker Pack {f_name}"
                     await xx.edit(
@@ -392,6 +395,7 @@ async def resize_photo(photo):
 
     return image
 
+
 @skyla_cmd(pattern="delsticker ?(.*)")
 async def _(event):
     if event.fwd_from:
@@ -440,7 +444,7 @@ async def _(event):
 
 @skyla_cmd(pattern="csticker ?(.*)")
 async def pussy(args):
-    "To kang a sticker." 
+    "To kang a sticker."
     message = await args.get_reply_message()
     user = await args.client.get_me()
     userid = user.id
@@ -501,6 +505,7 @@ async def pussy(args):
     if os.path.exists(sticker):
         os.remove(sticker)
 
+
 @skyla_cmd(pattern="itos$")
 async def _(event):
     if event.fwd_from:
@@ -555,7 +560,8 @@ async def _(event):
     )
     await xx.delete()
     remove("sticker.png")
-    
+
+
 @skyla_cmd(pattern="editsticker ?(.*)")
 async def _(event):
     if event.fwd_from:
@@ -648,8 +654,7 @@ async def get_pack_info(event):
         f"❍▸ **Official:** `{get_stickerset.set.official}`\n"
         f"❍▸ **Arsip:** `{get_stickerset.set.archived}`\n"
         f"❍▸ **Sticker Dalam Pack:** `{len(get_stickerset.packs)}`\n"
-        f"❍▸ **Emoji Dalam Pack:** {' '.join(pack_emojis)}"
-    )
+        f"❍▸ **Emoji Dalam Pack:** {' '.join(pack_emojis)}")
 
     await xx.edit(OUTPUT)
 

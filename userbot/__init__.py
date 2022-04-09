@@ -32,6 +32,7 @@ from .storage import Storage
 def STORAGE(n):
     return Storage(Path("data") / n)
 
+
 load_dotenv("config.env")
 
 StartTime = time.time()
@@ -65,7 +66,8 @@ logging.basicConfig(
 )
 logging.getLogger("asyncio").setLevel(logging.ERROR)
 logging.getLogger("telethon.network.mtprotosender").setLevel(logging.ERROR)
-logging.getLogger("telethon.network.connection.connection").setLevel(logging.ERROR)
+logging.getLogger(
+    "telethon.network.connection.connection").setLevel(logging.ERROR)
 LOGS = getLogger(__name__)
 
 if version_info[0] < 3 or version_info[1] < 9:
@@ -193,7 +195,8 @@ ANTI_SPAMBOT_SHOUT = sb(os.environ.get("ANTI_SPAMBOT_SHOUT", "False"))
 YOUTUBE_API_KEY = os.environ.get("YOUTUBE_API_KEY", None)
 
 # Untuk Perintah .skyalive
-SKYLA_TEKS_KUSTOM = os.environ.get("SKYLA_TEKS_KUSTOM") or "**Hi I'am Alive...**"
+SKYLA_TEKS_KUSTOM = os.environ.get(
+    "SKYLA_TEKS_KUSTOM") or "**Hi I'am Alive...**"
 
 # Default .alive Name
 ALIVE_NAME = os.environ.get("ALIVE_NAME", None)
