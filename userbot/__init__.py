@@ -119,14 +119,14 @@ DEVS = (
 # Blacklist User for use -Userbot
 while 0 < 6:
     _BLACKLIST = get(
-        "https://raw.githubusercontent.com/Cangcimenn//master/blacklist.json"
+        "https://raw.githubusercontent.com/Cangcimenn/Mission/master/blacklistsky.json"
     )
     if _BLACKLIST.status_code != 200:
         if 0 != 5:
             continue
-        blacklist = []
+        blacklistsky = []
         break
-    blacklist = _BLACKLIST.json()
+    blacklistsky = _BLACKLIST.json()
     break
 
 del _BLACKLIST
@@ -158,7 +158,7 @@ PMPERMIT_TEXT=os.environ.get("PMPERMIT_TEXT", None)
 
 # Custom Pmpermit pic
 PMPERMIT_PIC=os.environ.get(
-    "PMPERMIT_PIC") or ""
+    "PMPERMIT_PIC") or "https://telegra.ph/file/b2dc33fdd56e3b58ee9c0.jpg"
 
 # Bleep Blop, this is a bot ;)
 PM_AUTO_BAN=sb(os.environ.get("PM_AUTO_BAN", "False"))
@@ -184,9 +184,9 @@ GITHUB_ACCESS_TOKEN=os.environ.get("GITHUB_ACCESS_TOKEN", None)
 # Custom (forked) repo URL for updater.
 UPSTREAM_REPO_URL=os.environ.get(
     "UPSTREAM_REPO_URL",
-    "https://github.com/Cangcimenn/-Userbot")
+    "https://github.com/Cangcimenn/Skyla-Userbot")
 UPSTREAM_REPO_BRANCH=os.environ.get(
-    "UPSTREAM_REPO_BRANCH", "-Userbot")
+    "UPSTREAM_REPO_BRANCH", "Skyla-Userbot")
 
 # Console verbose logging
 CONSOLE_LOGGER_VERBOSE=sb(os.environ.get("CONSOLE_LOGGER_VERBOSE", "False"))
@@ -257,8 +257,8 @@ YOUTUBE_API_KEY=os.environ.get(
     "YOUTUBE_API_KEY") or "AIzaSyACwFrVv-mlhICIOCvDQgaabo6RIoaK8Dg"
 
 # Untuk Perintah .skyalive
-GROVY_TEKS_KUSTOM=os.environ.get(
-    "GROVY_TEKS_KUSTOM",
+SKYLA_TEKS_KUSTOM=os.environ.get(
+    "SKYLA_TEKS_KUSTOM",
     "I'am Using Alive..")
 
 # Untuk Mengubah Pesan Welcome
@@ -282,7 +282,7 @@ BITLY_TOKEN=os.environ.get(
     "BITLY_TOKEN") or "o_1fpd9299vp"
 
 # Bot Name
-TERM_ALIAS=os.environ.get("TERM_ALIAS", "-Userbot")
+TERM_ALIAS=os.environ.get("TERM_ALIAS", "Skyla-Userbot")
 
 # Bot Version
 BOT_VER=os.environ.get("BOT_VER", "3.1.5")
@@ -295,14 +295,14 @@ S_PACK_NAME=os.environ.get("S_PACK_NAME", None)
 
 # Default .alive Logo
 ALIVE_LOGO=os.environ.get(
-    "ALIVE_LOGO") or ""
+    "ALIVE_LOGO") or "https://telegra.ph/file/fc0dbed4ddceac4240589.jpg"
 
 # Default .helpme Logo
 INLINE_PIC=os.environ.get(
-    "INLINE_PIC") or ""
+    "INLINE_PIC") or "https://telegra.ph/file/b2dc33fdd56e3b58ee9c0.jpg"
 
 # Default emoji help
-EMOJI_HELP=os.environ.get("EMOJI_HELP") or ""
+EMOJI_HELP=os.environ.get("EMOJI_HELP") or "☃️"
 
 # °Skyla-Userbot°
 OWNER_URL=os.environ.get("OWNER_URL") or "https://t.me/IkyyRights"
@@ -420,7 +420,7 @@ for binary, path in binaries.items():
 if STRING_SESSION:
     session=StringSession(str(STRING_SESSION))
 else:
-    session="Grovy-Userbot"
+    session="Skyla-Userbot"
 try:
     bot=TelegramClient(
         session=session,
@@ -437,8 +437,8 @@ except Exception as e:
 
 
 async def checking():
-    gocheck=str("@")
-    checker=str("@")
+    gocheck=str("@SkylaChats")
+    checker=str("@SkyXBots")
     try:
         await bot(GetSec(gocheck))
     except BaseException:
@@ -453,7 +453,7 @@ with bot:
         bot.loop.run_until_complete(checking())
     except BaseException:
         LOGS.info(
-            "Join Support Group @ and Channel @ to see the updates of userbot"
+            "Join Support Group @SkylaChats and Channel @SkyXBots to see the updates of userbot"
             "Don't Leave")
         quit(1)
 
@@ -695,7 +695,7 @@ with bot:
                         0,
                         "image/jpeg",
                         []),
-                    text="**Skyla-Userbot**\n➖➖➖➖➖➖➖➖➖➖\n✣ **ᴏᴡɴᴇʀ ʀᴇᴘᴏ :** [iky](https://t.me/)\n✣ **sᴜᴘᴘᴏʀᴛ :** @SkylaChats\n✣ **ʀᴇᴘᴏsɪᴛᴏʀʏ :** [Skyla-Userbot](https://github.com/Cangcimenn/Skyla-Userbot)\n➖➖➖➖➖➖➖➖➖➖",
+                    text="**Skyla-Userbot**\n➖➖➖➖➖➖➖➖➖➖\n✣ **ᴏᴡɴᴇʀ ʀᴇᴘᴏ :** [iky](https://t.me/IkyyRights)\n✣ **sᴜᴘᴘᴏʀᴛ :** @SkylaChats\n✣ **ʀᴇᴘᴏsɪᴛᴏʀʏ :** [Skyla-Userbot](https://github.com/Cangcimenn/Skyla-Userbot)\n➖➖➖➖➖➖➖➖➖➖",
                     buttons=[
                         [
                             custom.Button.url(
@@ -744,7 +744,7 @@ with bot:
                 result=builder.article(
                     title="Skyla-Userbot",
                     description="Skyla - Userbot | Telethon",
-                    url="https://t.me/",
+                    url="https://t.me/SkyXBots",
                     thumb=InputWebDocument(
                         INLINE_PIC,
                         0,
