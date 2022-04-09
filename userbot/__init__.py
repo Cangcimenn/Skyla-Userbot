@@ -145,8 +145,8 @@ STRING_SESSION = os.environ.get("STRING_SESSION", "")
 BOTLOG_CHATID = int(os.environ.get("BOTLOG_CHATID", None)
 
 # Handler Userbot
-CMD_HANDLER= os.environ.get("CMD_HANDLER") or "."
-SUDO_HANDLER= os.environ.get("SUDO_HANDLER") or "$"
+CMD_HANDLER=os.environ.get("CMD_HANDLER") or "."
+SUDO_HANDLER=os.environ.get("SUDO_HANDLER") or "$"
 
 # Userbot logging feature switch.
 BOTLOG=sb(os.environ.get("BOTLOG", "True"))
