@@ -1,28 +1,34 @@
 name: PyLint
-on: push
+
+on: [push, pull_request]
+
 jobs:
   PEP8:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
           python-version: 3.9
+
       - name: Install Python lint libraries
         run: |
-          pip install autoflake isort black
+          pip install autopep8 autoflake
+      - name: Check for showstoppers
+        run: |
+          autopep8 --verbose --in-place --recursive --aggressive --aggressive . *.py
       - name: Remove unused imports and variables
         run: |
           autoflake --in-place --recursive --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports .
-          
-          
-          # commit change
+      
+      # commit changes
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: 'Rose-Userbot: auto fixes'
+          commit_message: 'pylint: auto fixes'
           commit_options: '--no-verify --signoff'
           repository: .
-          commit_user_name: skyla
-          commit_user_email: skyla.bot123@gmail.com
-          commit_author: skyla <bot123@gmail.com>
+          commit_user_name: Cangcimenn
+          commit_user_email: skylabot35@gmail.com
+          commit_author: Cangcimenn <skylabot35@gmail.com>
