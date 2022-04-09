@@ -50,7 +50,7 @@ LOGS.info(
 async def check_alive():
     try:
         if BOTLOG_CHATID != 0:
-            await bot.send_message(BOTLOG_CHATID, "**Skyla Userbot Berhasil Diaktifkan**⚡\n━━━━━━━━━━━━━━━\n➠ **Userbot Version** - 3.1.5@Skyla-Userbot\n➠ **Ketik** `.ping` **Untuk Mengecheck Bot**\n━━━━━━━━━━━━━━━\n➠ **Powered By:** @ ")
+            await bot.send_message(BOTLOG_CHATID, "**Skyla Userbot Berhasil Diaktifkan**⚡\n━━━━━━━━━━━━━━━\n➠ **Userbot Version** - 3.1.5@Skyla-Userbot\n➠ **Ketik** `.ping` **Untuk Mengecheck Bot**\n━━━━━━━━━━━━━━━\n➠ **Powered By:** @SkyXBots ")
     except Exception as e:
         LOGS.info(str(e))
     try:
