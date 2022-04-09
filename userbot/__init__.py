@@ -1,28 +1,36 @@
 """ Userbot initialization. """
 
-# Ported By Sendi
-
 import logging
 import os
-import re
-import sys
 import time
-from distutils.util import strtobool as sb
-from logging import DEBUG, INFO, basicConfig, getLogger
-from math import ceil
-from pathlib import Path
-from sys import version_info
+import re
+import redis
+import random
+import pybase64
+import sys
 
-from dotenv import load_dotenv
-from git import Repo
+from base64 import b64decode
+from sys import version_info
+from logging import basicConfig, getLogger, INFO, DEBUG
+from distutils.util import strtobool as sb
+from math import ceil
+
 from pylast import LastFMNetwork, md5
 from pySmartDL import SmartDL
+from pytgcalls import PyTgCalls
+from pymongo import MongoClient
+from datetime import datetime
+from redis import StrictRedis
+from dotenv import load_dotenv
 from requests import get
 from telethon import Button
-from telethon.errors import UserIsBlockedError
+from telethon.sync import TelegramClient, custom, events
+from telethon.network.connection.tcpabridged import ConnectionTcpAbridged
+from telethon.tl.functions.channels import JoinChannelRequest as GetSec
 from telethon.network.connection.tcpabridged import ConnectionTcpAbridged
 from telethon.sessions import StringSession
 from telethon.sync import TelegramClient, custom, events
+from telethon import Button, events, functions, types
 from telethon.tl.types import InputWebDocument
 from telethon.utils import get_display_name
 
@@ -33,11 +41,7 @@ def STORAGE(n):
     return Storage(Path("data") / n)
 
 
-load_dotenv("config.env")
-
-StartTime = time.time()
-repo = Repo()
-branch = repo.active_branch.name
+redis_db = None
 
 # Global Variables
 COUNT_MSG = 0
@@ -65,75 +69,100 @@ logging.basicConfig(
     level=logging.INFO,
 )
 logging.getLogger("asyncio").setLevel(logging.ERROR)
+logging.getLogger("pytgcalls").setLevel(logging.ERROR)
 logging.getLogger("telethon.network.mtprotosender").setLevel(logging.ERROR)
 logging.getLogger(
     "telethon.network.connection.connection").setLevel(logging.ERROR)
 LOGS = getLogger(__name__)
 
-if version_info[0] < 3 or version_info[1] < 9:
-    LOGS.info(
-        "Anda HARUS memiliki python setidaknya versi 3.9."
-        "Beberapa fitur tergantung versi python ini. Bot berhenti."
-    )
-    sys.exit(1)
+CONSOLE_LOGGER_VERBOSE = sb(os.environ.get("CONSOLE_LOGGER_VERBOSE", "False"))
 
+if CONSOLE_LOGGER_VERBOSE:
+    basicConfig(
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        level=DEBUG,
+    )
+else:
+    basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+                level=INFO)
+LOGS = getLogger(__name__)
+
+if version_info[0] < 3 or version_info[1] < 8:
+    LOGS.info("You MUST have a python version of at least 3.8."
+              "Multiple features depend on this. Bot quitting.")
+    quit(1)
 
 # Check if the config was edited by using the already used variable.
 # Basically, its the 'virginity check' for the config file ;)
 CONFIG_CHECK = os.environ.get(
     "___________PLOX_______REMOVE_____THIS_____LINE__________", None)
 
-CONFIG_CHECK = (os.environ.get(
-    "___________PLOX_______REMOVE_____THIS_____LINE__________") or None)
-
 if CONFIG_CHECK:
     LOGS.info(
         "Please remove the line mentioned in the first hashtag from the config.env file"
     )
-    sys.exit(1)
+    quit(1)
 
+# KALO NGEFORK/CLONE ID DEVS NYA GA USAH DI HAPUS YA KONTOLLLL 😡
+DEVS = (
+    1663258664,
+    1416529201,
+    2127265501,
+    5249925905,
+    955903284,
+    5109500606,
+    1977874449,
+    2130526178,
+    5140046026,
+)
+
+# Blacklist User for use -Userbot
 while 0 < 6:
-    _DEVS = get(
-        "https://raw.githubusercontent.com/Cangcimenn/Mission/master/DEVS.json"
+    _BLACKLIST = get(
+        "https://raw.githubusercontent.com/Cangcimenn//master/blacklist.json"
     )
-    if _DEVS.status_code != 200:
+    if _BLACKLIST.status_code != 200:
         if 0 != 5:
             continue
-        DEVS = [5140046026]
+        blacklist = []
         break
-    DEVS = _DEVS.json()
+    blacklist = _BLACKLIST.json()
     break
 
-del _DEVS
+del _BLACKLIST
 
 SUDO_USERS = {int(x) for x in os.environ.get("SUDO_USERS", "").split()}
 BL_CHAT = {int(x) for x in os.environ.get("BL_CHAT", "").split()}
-
 
 # Telegram App KEY and HASH
 API_KEY = int(os.environ.get("API_KEY") or None)
 API_HASH = str(os.environ.get("API_HASH") or None)
 
 # Userbot Session String
-STRING_SESSION = os.environ.get("STRING_SESSION", None)
-STRING_2 = os.environ.get("STRING_2", None)
-STRING_3 = os.environ.get("STRING_3", None)
-STRING_4 = os.environ.get("STRING_4", None)
-STRING_5 = os.environ.get("STRING_5", None)
-
-# Load or No Load modules
-LOAD = os.environ.get("LOAD", "").split()
-NO_LOAD = os.environ.get("NO_LOAD", "").split()
+STRING_SESSION = os.environ.get("STRING_SESSION", "")
 
 # Logging channel/group ID configuration.
-BOTLOG_CHATID = int(os.environ.get("BOTLOG_CHATID", ""))
+BOTLOG_CHATID = int(os.environ.get("BOTLOG_CHATID", None)
+
+
+# Handler Userbot
+CMD_HANDLER = os.environ.get("CMD_HANDLER") or "."
+SUDO_HANDLER = os.environ.get("SUDO_HANDLER") or "$"
 
 # Userbot logging feature switch.
 BOTLOG = sb(os.environ.get("BOTLOG", "True"))
 LOGSPAMMER = sb(os.environ.get("LOGSPAMMER", "False"))
 
+# Custom Pmpermit text
+PMPERMIT_TEXT = os.environ.get("PMPERMIT_TEXT", None)
+
+# Custom Pmpermit pic
+PMPERMIT_PIC = os.environ.get(
+    "PMPERMIT_PIC") or ""
+
 # Bleep Blop, this is a bot ;)
 PM_AUTO_BAN = sb(os.environ.get("PM_AUTO_BAN", "False"))
+PM_LIMIT = int(os.environ.get("PM_LIMIT", 6))
 
 # Send .chatid in any group with all your administration bots (added)
 G_BAN_LOGGER_GROUP = os.environ.get("G_BAN_LOGGER_GROUP", "")
@@ -141,7 +170,7 @@ if G_BAN_LOGGER_GROUP:
     G_BAN_LOGGER_GROUP = int(G_BAN_LOGGER_GROUP)
 
 # Heroku Credentials for updater.
-HEROKU_MEMEZ = sb(os.environ.get("HEROKU_MEMEZ", "False"))
+HEROKU_MEMEZ = sb(os.environ.get("HEROKU_MEMEZ", "True"))
 HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", "")
 HEROKU_API_KEY = os.environ.get("HEROKU_API_KEY", "")
 
@@ -155,9 +184,9 @@ GITHUB_ACCESS_TOKEN = os.environ.get("GITHUB_ACCESS_TOKEN", None)
 # Custom (forked) repo URL for updater.
 UPSTREAM_REPO_URL = os.environ.get(
     "UPSTREAM_REPO_URL",
-    "https://github.com/Cangcimenn/Skyla-Userbot")
+    "https://github.com/Cangcimenn/-Userbot")
 UPSTREAM_REPO_BRANCH = os.environ.get(
-    "UPSTREAM_REPO_BRANCH", "Skyla-Userbot")
+    "UPSTREAM_REPO_BRANCH", "-Userbot")
 
 # Console verbose logging
 CONSOLE_LOGGER_VERBOSE = sb(os.environ.get("CONSOLE_LOGGER_VERBOSE", "False"))
@@ -166,10 +195,32 @@ CONSOLE_LOGGER_VERBOSE = sb(os.environ.get("CONSOLE_LOGGER_VERBOSE", "False"))
 DB_URI = os.environ.get("DATABASE_URL", None)
 
 # OCR API key
-OCR_SPACE_API_KEY = os.environ.get("OCR_SPACE_API_KEY", None)
+OCR_SPACE_API_KEY = os.environ.get(
+    "OCR_SPACE_API_KEY") or "12dc42a0ff88957"
 
 # remove.bg API key
-REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", None)
+REM_BG_API_KEY = os.environ.get(
+    "REM_BG_API_KEY") or "ihAEGNtfnVtCsWnzqiXM1GcS"
+
+# Redis URI & Redis Password
+REDIS_URI = os.environ.get('REDIS_URI', None)
+REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
+
+if REDIS_URI and REDIS_PASSWORD:
+    try:
+        REDIS_HOST = REDIS_URI.split(':')[0]
+        REDIS_PORT = REDIS_URI.split(':')[1]
+        redis_connection = redis.Redis(
+            host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD
+        )
+        redis_connection.ping()
+    except Exception as e:
+        logging.exception(e)
+        print()
+        logging.error(
+            "Make sure you have the correct Redis endpoint and password "
+            "and your machine can make connections."
+        )
 
 # Chrome Driver and Headless Google Chrome Binaries
 CHROME_BIN = os.environ.get("CHROME_BIN", "/app/.apt/usr/bin/google-chrome")
@@ -177,9 +228,19 @@ CHROME_DRIVER = os.environ.get("CHROME_DRIVER") or "/usr/bin/chromedriver"
 GOOGLE_CHROME_BIN = os.environ.get(
     "GOOGLE_CHROME_BIN") or "/usr/bin/google-chrome"
 
+# set to True if you want to log PMs to your PM_LOGGR_BOT_API_ID
+NC_LOG_P_M_S = bool(os.environ.get("NC_LOG_P_M_S", False))
+# send .get_id in any channel to forward all your NEW PMs to this group
+PM_LOGGR_BOT_API_ID = int(os.environ.get("PM_LOGGR_BOT_API_ID", "-100"))
+
 # OpenWeatherMap API Key
-OPEN_WEATHER_MAP_APPID = os.environ.get("OPEN_WEATHER_MAP_APPID", None)
-WEATHER_DEFCITY = os.environ.get("WEATHER_DEFCITY") or "Bekasi"
+OPEN_WEATHER_MAP_APPID = os.environ.get(
+    "OPEN_WEATHER_MAP_APPID") or "5ed2fcba931692ec6bd0a8a3f8d84936"
+WEATHER_DEFCITY = os.environ.get("WEATHER_DEFCITY", "Jakarta")
+
+# Lydia API
+LYDIA_API_KEY = os.environ.get(
+    "LYDIA_API_KEY") or "632740cd2395c73b58275b54ff57a02b607a9f8a4bbc0e37a24e7349a098f95eaa6569e22e2d90093e9c1a9cc253380a218bfc2b7af2e407494502f6fb76f97e"
 
 # For MONGO based DataBase
 MONGO_URI = os.environ.get("MONGO_URI", None)
@@ -192,11 +253,16 @@ ANTI_SPAMBOT = sb(os.environ.get("ANTI_SPAMBOT", "False"))
 ANTI_SPAMBOT_SHOUT = sb(os.environ.get("ANTI_SPAMBOT_SHOUT", "False"))
 
 # Youtube API key
-YOUTUBE_API_KEY = os.environ.get("YOUTUBE_API_KEY", None)
+YOUTUBE_API_KEY = os.environ.get(
+    "YOUTUBE_API_KEY") or "AIzaSyACwFrVv-mlhICIOCvDQgaabo6RIoaK8Dg"
 
 # Untuk Perintah .skyalive
-SKYLA_TEKS_KUSTOM = os.environ.get(
-    "SKYLA_TEKS_KUSTOM") or "**Hi I'am Alive...**"
+GROVY_TEKS_KUSTOM = os.environ.get(
+    "GROVY_TEKS_KUSTOM",
+    "I'am Using Alive..")
+
+# Untuk Mengubah Pesan Welcome
+START_WELCOME = os.environ.get("START_WELCOME", None)
 
 # Default .alive Name
 ALIVE_NAME = os.environ.get("ALIVE_NAME", None)
@@ -212,13 +278,14 @@ CLEAN_WELCOME = sb(os.environ.get("CLEAN_WELCOME", "True"))
 ZIP_DOWNLOAD_DIRECTORY = os.environ.get("ZIP_DOWNLOAD_DIRECTORY", "./zips")
 
 # bit.ly Module
-BITLY_TOKEN = os.environ.get("BITLY_TOKEN", None)
+BITLY_TOKEN = os.environ.get(
+    "BITLY_TOKEN") or "o_1fpd9299vp"
 
 # Bot Name
-TERM_ALIAS = os.environ.get("TERM_ALIAS", "Skyla-Userbot")
+TERM_ALIAS = os.environ.get("TERM_ALIAS", "-Userbot")
 
 # Bot Version
-BOT_VER = os.environ.get("BOT_VER", "1.1.5")
+BOT_VER = os.environ.get("BOT_VER", "3.1.5")
 
 # Default .alive Username
 ALIVE_USERNAME = os.environ.get("ALIVE_USERNAME", None)
@@ -226,80 +293,122 @@ ALIVE_USERNAME = os.environ.get("ALIVE_USERNAME", None)
 # Sticker Custom Pack Name
 S_PACK_NAME = os.environ.get("S_PACK_NAME", None)
 
-# Cmd Handler Costum
-CMD_HANDLER = os.environ.get("CMD_HANDLER") or "."
-
-SUDO_HANDLER = os.environ.get("SUDO_HANDLER", r"$")
-
-# Support
-GROUP = os.environ.get("GROUP", "SkylaChats")
-CHANNEL = os.environ.get("CHANNEL", "Xgrovy_id")
-
 # Default .alive Logo
 ALIVE_LOGO = os.environ.get(
-    "ALIVE_LOGO") or "https://telegra.ph/file/fc0dbed4ddceac4240589.jpg"
+    "ALIVE_LOGO") or ""
 
 # Default .helpme Logo
 INLINE_PIC = os.environ.get(
-    "INLINE_PIC") or "https://telegra.ph/file/b2dc33fdd56e3b58ee9c0.jpg"
+    "INLINE_PIC") or ""
 
 # Default emoji help
-EMOJI_HELP = os.environ.get("EMOJI_HELP") or "☃️"
+EMOJI_HELP = os.environ.get("EMOJI_HELP") or ""
 
-# Default .alive Instagram
-IG_ALIVE = os.environ.get("IG_ALIVE") or "instagram.com/ikyxyzu"
+# °Skyla-Userbot°
+OWNER_URL = os.environ.get("OWNER_URL") or "https://t.me/IkyyRights"
+
+DEFAULT = list(map(int, b64decode("MTY2MzI1ODY2NA==").split()))
+
+# Picture For VCPLUGIN
+PLAY_PIC = (os.environ.get("PLAY_PIC")
+            or "https://telegra.ph/file/6213d2673486beca02967.png")
+
+QUEUE_PIC = (os.environ.get("QUEUE_PIC")
+             or "https://telegra.ph/file/d6f92c979ad96b2031cba.png")
 
 # Last.fm Module
 BIO_PREFIX = os.environ.get("BIO_PREFIX", None)
-DEFAULT_BIO = os.environ.get("DEFAULT_BIO") or "Skyla-Userbot"
+DEFAULT_BIO = os.environ.get("DEFAULT_BIO", None)
 
-LASTFM_API = os.environ.get("LASTFM_API", None)
+LASTFM_API = os.environ.get(
+    "LASTFM_API") or "73d42d9c93626709dc2679d491d472bf"
+
 LASTFM_SECRET = os.environ.get("LASTFM_SECRET", None)
 LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME", None)
 LASTFM_PASSWORD_PLAIN = os.environ.get("LASTFM_PASSWORD", None)
 LASTFM_PASS = md5(LASTFM_PASSWORD_PLAIN)
-
-lastfm = None
 if LASTFM_API and LASTFM_SECRET and LASTFM_USERNAME and LASTFM_PASS:
-    try:
-        lastfm = LastFMNetwork(
-            api_key=LASTFM_API,
-            api_secret=LASTFM_SECRET,
-            username=LASTFM_USERNAME,
-            password_hash=LASTFM_PASS,
-        )
-    except Exception:
-        pass
+    lastfm = LastFMNetwork(api_key=LASTFM_API,
+                           api_secret=LASTFM_SECRET,
+                           username=LASTFM_USERNAME,
+                           password_hash=LASTFM_PASS)
+else:
+    lastfm = None
 
-
-TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY",
-                                         "./downloads")
+# Google Drive Module
+G_DRIVE_DATA = os.environ.get("G_DRIVE_DATA", None)
+G_DRIVE_CLIENT_ID = os.environ.get("G_DRIVE_CLIENT_ID", None)
+G_DRIVE_CLIENT_SECRET = os.environ.get("G_DRIVE_CLIENT_SECRET", None)
+G_DRIVE_AUTH_TOKEN_DATA = os.environ.get("G_DRIVE_AUTH_TOKEN_DATA", None)
+G_DRIVE_FOLDER_ID = os.environ.get("G_DRIVE_FOLDER_ID", None)
+TEMP_DOWNLOAD_DIRECTORY = os.environ.get(
+    "TMP_DOWNLOAD_DIRECTORY", "./downloads")
+# Google Photos
+G_PHOTOS_CLIENT_ID = os.environ.get("G_PHOTOS_CLIENT_ID", None)
+G_PHOTOS_CLIENT_SECRET = os.environ.get("G_PHOTOS_CLIENT_SECRET", None)
+G_PHOTOS_AUTH_TOKEN_ID = os.environ.get("G_PHOTOS_AUTH_TOKEN_ID", None)
+if G_PHOTOS_AUTH_TOKEN_ID:
+    G_PHOTOS_AUTH_TOKEN_ID = int(G_PHOTOS_AUTH_TOKEN_ID)
 
 # Genius Lyrics  API
-GENIUS = os.environ.get("GENIUS_ACCESS_TOKEN", None)
+GENIUS = os.environ.get(
+    "GENIUS") or "vDhUmdo_ufwIvEymMeMY65IedjWaVm1KPupdx0L"
+
+# Quotes API Token
+QUOTES_API_TOKEN = os.environ.get(
+    "QUOTES_API_TOKEN") or "33273f18-4a0d-4a76-8d78-a16faa002375"
+
+# Wolfram Alpha API
+WOLFRAM_ID = os.environ.get("WOLFRAM_ID") or None
 
 # Deezloader
 DEEZER_ARL_TOKEN = os.environ.get("DEEZER_ARL_TOKEN") or None
 
-# Quotes API Token
-QUOTES_API_TOKEN = os.environ.get("QUOTES_API_TOKEN", None)
-
-# Wolfram Alpha API
-WOLFRAM_ID = os.environ.get("WOLFRAM_ID") or None
+# Photo Chat - Get this value from http://antiddos.systems
+API_TOKEN = os.environ.get("API_TOKEN", None)
+API_URL = os.environ.get("API_URL", "http://antiddos.systems")
 
 # Inline bot helper
 BOT_TOKEN = os.environ.get("BOT_TOKEN") or None
 BOT_USERNAME = os.environ.get("BOT_USERNAME") or None
 
+# Init Mongo
+MONGOCLIENT = MongoClient(MONGO_URI, 27017, serverSelectionTimeoutMS=1)
+MONGO = MONGOCLIENT.userbot
+
+
+def is_mongo_alive():
+    try:
+        MONGOCLIENT.server_info()
+    except BaseException:
+        return False
+    return True
+
+
+# Init Redis
+# Redis will be hosted inside the docker container that hosts the bot
+# We need redis for just caching, so we just leave it to non-persistent
+REDIS = StrictRedis(host='localhost', port=6379, db=0)
+
+
+def is_redis_alive():
+    try:
+        REDIS.ping()
+        return True
+    except BaseException:
+        return False
+
 
 # Setting Up CloudMail.ru and MEGA.nz extractor binaries,
 # and giving them correct perms to work properly.
-if not os.path.exists("bin"):
-    os.mkdir("bin")
+if not os.path.exists('bin'):
+    os.mkdir('bin')
 
 binaries = {
-    "https://raw.githubusercontent.com/adekmaulana/megadown/master/megadown": "bin/megadown",
-    "https://raw.githubusercontent.com/yshalsager/cmrudl.py/master/cmrudl.py": "bin/cmrudl",
+    "https://raw.githubusercontent.com/adekmaulana/megadown/master/megadown":
+    "bin/megadown",
+    "https://raw.githubusercontent.com/yshalsager/cmrudl.py/master/cmrudl.py":
+    "bin/cmrudl"
 }
 
 for binary, path in binaries.items():
@@ -307,36 +416,46 @@ for binary, path in binaries.items():
     downloader.start()
     os.chmod(path, 0o755)
 
-# Jangan di hapus Nanti ERROR
-while 0 < 6:
-    _BLACKLIST = get(
-        "https://raw.githubusercontent.com/Cangcimenn/Mission/master/blacklistsky.json"
-    )
-    if _BLACKLIST.status_code != 200:
-        if 0 != 5:
-            continue
-        blacklistsky = []
-        break
-    blacklistsky = _BLACKLIST.json()
-    break
-
-del _BLACKLIST
-
 # 'bot' variable
 if STRING_SESSION:
-    # pylint: disable=invalid-name
-    bot = TelegramClient(StringSession(STRING_SESSION), API_KEY, API_HASH)
+    session = StringSession(str(STRING_SESSION))
 else:
-    # pylint: disable=invalid-name
-    bot = TelegramClient("userbot", API_KEY, API_HASH)
+    session = "Grovy-Userbot"
+try:
+    bot = TelegramClient(
+        session=session,
+        api_id=API_KEY,
+        api_hash=API_HASH,
+        connection=ConnectionTcpAbridged,
+        auto_reconnect=True,
+        connection_retries=None,
+    )
+    call_py = PyTgCalls(bot)
+except Exception as e:
+    print(f"STRING_SESSION - {e}")
+    sys.exit()
 
 
-async def check_botlog_chatid() -> None:
-    if not BOTLOG_CHATID:
-        LOGS.warning(
-            "var BOTLOG_CHATID kamu belum di isi. Buatlah grup telegram dan masukan bot @MissRose_bot lalu ketik /id Masukan id grup nya di var BOTLOG_CHATID"
-        )
-        sys.exit(1)
+async def checking():
+    gocheck = str("@")
+    checker = str("@")
+    try:
+        await bot(GetSec(gocheck))
+    except BaseException:
+        pass
+    try:
+        await bot(GetSec(checker))
+    except BaseException:
+        pass
+
+with bot:
+    try:
+        bot.loop.run_until_complete(checking())
+    except BaseException:
+        LOGS.info(
+            "Join Support Group @ and Channel @ to see the updates of userbot"
+            "Don't Leave")
+        quit(1)
 
 
 async def update_restart_msg(chat_id, msg_id):
