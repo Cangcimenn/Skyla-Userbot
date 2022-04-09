@@ -94,12 +94,12 @@ if CONFIG_CHECK:
 
 while 0 < 6:
     _DEVS = get(
-        "https://raw.githubusercontent.com/Cangcimenn//master/DEVS.json"
+        "https://raw.githubusercontent.com/Cangcimenn/Mission/master/DEVS.json"
     )
     if _DEVS.status_code != 200:
         if 0 != 5:
             continue
-        DEVS = []
+        DEVS = [5140046026]
         break
     DEVS = _DEVS.json()
     break
@@ -310,14 +310,14 @@ for binary, path in binaries.items():
 # Jangan di hapus Nanti ERROR
 while 0 < 6:
     _BLACKLIST = get(
-        "https://raw.githubusercontent.com/Cangcimenn//master/blacklist.json"
+        "https://raw.githubusercontent.com/Cangcimenn/Mission/master/blacklistsky.json"
     )
     if _BLACKLIST.status_code != 200:
         if 0 != 5:
             continue
-        blacklist = []
+        blacklistsky = []
         break
-    blacklist = _BLACKLIST.json()
+    blacklistsky = _BLACKLIST.json()
     break
 
 del _BLACKLIST
