@@ -555,7 +555,7 @@ with bot:
             builder = event.builder
             result = None
             query = event.text
-            if event.query.user_id == uid and query.startswith("@"):
+            if event.query.user_id == uid and query.startswith("@SkylaChats"):
                 buttons = paginate_help(0, dugmeler, "helpme")
                 result = await event.builder.photo(
                     file=kyylogo,
@@ -573,15 +573,15 @@ with bot:
                         0,
                         "image/jpeg",
                         []),
-                    text="**Skyla-Userbot**\n➖➖➖➖➖➖➖➖➖➖\n✣ **ᴏᴡɴᴇʀ ʀᴇᴘᴏ :** [iky](https://t.me/)\n✣ **sᴜᴘᴘᴏʀᴛ :** @\n✣ **ʀᴇᴘᴏsɪᴛᴏʀʏ :** [Skyla-Userbot](https://github.com//Skyla-Userbot)\n➖➖➖➖➖➖➖➖➖➖",
+                    text="**Skyla-Userbot**\n➖➖➖➖➖➖➖➖➖➖\n✣ **ᴏᴡɴᴇʀ ʀᴇᴘᴏ :** [iky](https://t.me/)\n✣ **sᴜᴘᴘᴏʀᴛ :** @SkylaChats\n✣ **ʀᴇᴘᴏsɪᴛᴏʀʏ :** [Skyla-Userbot](https://github.com/Cangcimenn/Skyla-Userbot)\n➖➖➖➖➖➖➖➖➖➖",
                     buttons=[
                         [
                             custom.Button.url(
                                 "ɢʀᴏᴜᴘ",
-                                "https://t.me/"),
+                                "https://t.me/SkylaChats"),
                             custom.Button.url(
                                 "ʀᴇᴘᴏ",
-                                "https://github.com//Skyla-Userbot"),
+                                "https://github.com/Cangcimenn/Skyla-Userbot"),
                         ],
                     ],
                     link_preview=False,
