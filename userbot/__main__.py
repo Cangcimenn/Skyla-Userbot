@@ -16,6 +16,7 @@ from userbot import (
     BOT_TOKEN,
     BOT_VER,
     LOGS,
+    grovyblacklist,
     bot,
     call_py,
 )
@@ -31,7 +32,7 @@ try:
     ).json()
     if user.id in blacklist:
         LOGS.warning(
-            "MAKANYA GA USAH BERTINGKAH GOBLOK, USERBOTnya GUA MATIIN NAJIS BANGET DIPAKE ORANG KEK LU.\nCredits: @"
+            "MAKANYA GA USAH BERTINGKAH GOBLOK, USERBOTnya GUA MATIIN NAJIS BANGET DIPAKE ORANG KEK LU.\nCredits: @Xgrovy_id"
         )
         sys.exit(1)
 except Exception as e:
@@ -42,15 +43,15 @@ for module_name in ALL_MODULES:
     imported_module = import_module("userbot.modules." + module_name)
 
 LOGS.info(
-    f"Jika {user.first_name} Membutuhkan Bantuan, Silahkan Tanyakan di Grup https://t.me/skylasupport")
+    f"Jika {user.first_name} Membutuhkan Bantuan, Silahkan Tanyakan di Grup https://t.me/GrovySupport")
 LOGS.info(
-    f"Skyla-Userbot ⚙️ V{BOT_VER} [TELAH DIAKTIFKAN!]")
+    f"☃️Grovy-Userbot☃️ ⚙️ V{BOT_VER} [TELAH DIAKTIFKAN!]")
 
 
 async def check_alive():
     try:
         if BOTLOG_CHATID != 0:
-            await bot.send_message(BOTLOG_CHATID, "**⚡Skyla Userbot Berhasil Diaktifkan**⚡\n━━━━━━━━━━━━━━━\n➠ **Userbot Version** - 3.1.5@Skyla-Userbot\n➠ **Ketik** `.ping` **Untuk Mengecheck Bot**\n━━━━━━━━━━━━━━━\n➠ **Powered By:** @ ")
+            await bot.send_message(BOTLOG_CHATID, "**Skyla Userbot Berhasil Diaktifkan**⚡\n━━━━━━━━━━━━━━━\n➠ **Userbot Version** - 3.1.5@Skyla-Userbot\n➠ **Ketik** `.ping` **Untuk Mengecheck Bot**\n━━━━━━━━━━━━━━━\n➠ **Powered By:** @ ")
     except Exception as e:
         LOGS.info(str(e))
     try:
