@@ -337,12 +337,11 @@ async def check_botlog_chatid() -> None:
 
 
 async def update_restart_msg(chat_id, msg_id):
-    DEFAULTUSER = ALIVE_NAME or "Set `ALIVE_NAME` ConfigVar!"
     message = (
         f"**Skyla-Userbot v{BOT_VER} is back up and running!**\n\n"
         f"**Telethon:** {version.__version__}\n"
         f"**Python:** {python_version()}\n"
-        f"**User:** {DEFAULTUSER}"
+        f"**User:** {owner}"
     )
     await bot.edit_message(chat_id, msg_id, message)
     return True
@@ -354,7 +353,9 @@ try:
     chat_id, msg_id = gvarstatus("restartstatus").split("\n")
     with bot:
         try:
-            bot.loop.run_until_complete(update_restart_msg(int(chat_id), int(msg_id)))
+            bot.loop.run_until_complete(
+                update_restart_msg(
+                    int(chat_id), int(msg_id)))
         except BaseException:
             pass
     delgvar("restartstatus")
@@ -401,15 +402,17 @@ def paginate_help(page_number, loaded_modules, prefix):
     modulo_page = page_number % max_num_pages
     if len(pairs) > number_of_rows:
         pairs = pairs[
-            modulo_page * number_of_rows : number_of_rows * (modulo_page + 1)
+            modulo_page * number_of_rows: number_of_rows * (modulo_page + 1)
         ] + [
             (
                 custom.Button.inline(
-                    "««", data="{}_prev({})".format(prefix, modulo_page)
+                    "⪻", data="{}_prev({})".format(prefix, modulo_page)
                 ),
-                custom.Button.inline("Tutup", b"close"),
                 custom.Button.inline(
-                    "»»", data="{}_next({})".format(prefix, modulo_page)
+                    "ʙᴀᴄᴋ", data="{}_close({})".format(prefix, modulo_page)
+                ),
+                custom.Button.inline(
+                    "⪼", data="{}_next({})".format(prefix, modulo_page)
                 ),
             )
         ]
@@ -436,30 +439,29 @@ with bot:
         user = bot.get_me()
         uid = user.id
         owner = user.first_name
+        asst = tgbot.get_me()
+        botusername = asst.username
         logo = ALIVE_LOGO
-        roselogo = INLINE_PIC
+        kyylogo = INLINE_PIC
+        cmd = CMD_HANDLER
         tgbotusername = BOT_USERNAME
         BTN_URL_REGEX = re.compile(
             r"(\[([^\[]+?)\]\<buttonurl:(?:/{0,2})(.+?)(:same)?\>)"
         )
 
-        @tgbot.on(events.callbackquery.CallbackQuery(data=re.compile(rb"reopen")))
-        async def on_plug_in_callback_query_handler(event):
-            if event.query.user_id == uid or event.query.user_id in SUDO_USERS:
-                current_page_number = int(lockpage)
-                buttons = paginate_help(current_page_number, dugmeler, "helpme")
-                text = f"**✗ Skyla-Userbot Inline Menu ✗**\n\n✣ **Owner** [{user.first_name}](tg://user?id={user.id})\n✣ **Jumlah** `{len(dugmeler)}` Modules"
-                await event.edit(
-                    text,
-                    file=roselogo,
-                    buttons=buttons,
-                    link_preview=False,
-                )
-            else:
-                reply_pop_up_alert = f"Kamu Tidak diizinkan, ini Userbot Milik {owner}"
-                await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
+        main_help_button = [
+            [
+                Button.inline("ᴍᴏᴅᴜʟᴇs 📚", data="reopen"),
+                Button.inline("ᴠᴄ ᴍᴇɴᴜ 📎", data="skyla_inline"),
+            ],
+            [
+                Button.url("sᴇᴛᴛɪɴɢs ⚙️", f"t.me/{botusername}"),
+            ],
+            [Button.inline("ʙᴀᴄᴋ", data="close")],
+        ]
 
-        @tgbot.on(events.NewMessage(incoming=True, func=lambda e: e.is_private))
+        @tgbot.on(events.NewMessage(incoming=True,
+                  func=lambda e: e.is_private))
         async def bot_pms(event):
             chat = await event.get_chat()
             if check_is_black_list(chat.id):
@@ -515,8 +517,12 @@ with bot:
                         return await event.reply(f"**ERROR:** `{e}`")
                     try:
                         add_user_to_db(
-                            reply_to, user_name, user_id, reply_msg, event.id, msg.id
-                        )
+                            reply_to,
+                            user_name,
+                            user_id,
+                            reply_msg,
+                            event.id,
+                            msg.id)
                     except Exception as e:
                         LOGS.error(str(e))
                         if BOTLOG:
@@ -525,32 +531,57 @@ with bot:
                                 f"**ERROR:** Saat menyimpan detail pesan di database\n`{e}`",
                             )
 
+        @tgbot.on(
+            events.callbackquery.CallbackQuery(  # pylint:disable=E0602
+                data=re.compile(rb"reopen")
+            )
+        )
+        async def on_plug_in_callback_query_handler(event):
+            if event.query.user_id == uid or event.query.user_id in SUDO_USERS:
+                buttons = paginate_help(0, dugmeler, "helpme")
+                text = f"**Skyla-Userbot ɪɴʟɪɴᴇ ᴍᴇɴᴜ**\n\n✣ **ᴏᴡɴᴇʀ** [{user.first_name}](tg://user?id={user.id})\n✣ **ᴊᴜᴍʟᴀʜ** `{len(dugmeler)}` **Modules**"
+                await event.edit(
+                    text,
+                    file=kyylogo,
+                    buttons=buttons,
+                    link_preview=False,
+                )
+            else:
+                reply_pop_up_alert = f"Kamu Tidak diizinkan, ini Userbot Milik {owner}"
+                await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
+
         @tgbot.on(events.InlineQuery)
         async def inline_handler(event):
             builder = event.builder
             result = None
             query = event.text
-            if event.query.user_id == uid and query.startswith("@SkylaChats"):
+            if event.query.user_id == uid and query.startswith("@"):
                 buttons = paginate_help(0, dugmeler, "helpme")
-                result = builder.photo(
-                    file=roselogo,
+                result = await event.builder.photo(
+                    file=kyylogo,
                     link_preview=False,
-                    text=f"**✗ Skyla-Userbot Inline Menu ✗**\n\n✣ **Owner** [{user.first_name}](tg://user?id={user.id})\n✣ **Jumlah** `{len(dugmeler)}` Modules",
-                    buttons=buttons,
+                    text=f"**Skyla-Userbot ɪɴʟɪɴᴇ ᴍᴇɴᴜ**\n\n✣ **ᴏᴡɴᴇʀ :** [{user.first_name}](tg://user?id={user.id})\n✣ **ᴊᴜᴍʟᴀʜ** `{len(dugmeler)}` **Modules**",
+                    buttons=main_help_button,
                 )
             elif query.startswith("repo"):
                 result = builder.article(
                     title="Repository",
-                    description="Repository Skyla - Userbot",
+                    description="Repository Skyla-Userbot",
                     url="https://t.me/SkylaChats",
-                    thumb=InputWebDocument(INLINE_PIC, 0, "image/jpeg", []),
-                    text="**Skyla - UserBot**\n➖➖➖➖➖➖➖➖➖➖\n✣ **Owner Repo :** [iky](https://t.me/IkyyRights)\n✣ **Support :** @SkylaChats\n✣ **Repository :** [Skyla-Userbot](https://github.com/Cangcimenn/Skyla-Userbot)\n➖➖➖➖➖➖➖➖➖➖",
+                    thumb=InputWebDocument(
+                        INLINE_PIC,
+                        0,
+                        "image/jpeg",
+                        []),
+                    text="**Skyla-Userbot**\n➖➖➖➖➖➖➖➖➖➖\n✣ **ᴏᴡɴᴇʀ ʀᴇᴘᴏ :** [iky](https://t.me/)\n✣ **sᴜᴘᴘᴏʀᴛ :** @\n✣ **ʀᴇᴘᴏsɪᴛᴏʀʏ :** [Skyla-Userbot](https://github.com//Skyla-Userbot)\n➖➖➖➖➖➖➖➖➖➖",
                     buttons=[
                         [
-                            custom.Button.url("ɢʀᴏᴜᴘ", "https://t.me/Rose_Userbot"),
                             custom.Button.url(
-                                "ʀᴇᴘᴏ", "https://github.com/SendiAp/Rose-Userbot"
-                            ),
+                                "ɢʀᴏᴜᴘ",
+                                "https://t.me/"),
+                            custom.Button.url(
+                                "ʀᴇᴘᴏ",
+                                "https://github.com//Skyla-Userbot"),
                         ],
                     ],
                     link_preview=False,
@@ -568,9 +599,9 @@ with bot:
                         to_check -= 1
                     if n_escapes % 2 == 0:
                         buttons.append(
-                            (match.group(2), match.group(3), bool(match.group(4)))
-                        )
-                        note_data += markdown_note[prev : match.start(1)]
+                            (match.group(2), match.group(3), bool(
+                                match.group(4))))
+                        note_data += markdown_note[prev: match.start(1)]
                         prev = match.end(1)
                     elif n_escapes % 2 == 1:
                         note_data += markdown_note[prev:to_check]
@@ -589,17 +620,23 @@ with bot:
                 )
             else:
                 result = builder.article(
-                    title="✗ Skyla-Userbot ✗",
-                    description="Skyla - UserBot | Telethon",
-                    url="https://t.me/SkylaChats",
-                    thumb=InputWebDocument(INLINE_PIC, 0, "image/jpeg", []),
-                    text=f"**Skyla - UserBot**\n➖➖➖➖➖➖➖➖➖➖\n✣ **UserMode:** [{user.first_name}](tg://user?id={user.id})\n✣ **Assistant:** {tgbotusername}\n➖➖➖➖➖➖➖➖➖➖\n**Support:** @SkylaChats\n➖➖➖➖➖➖➖➖➖➖",
+                    title="Skyla-Userbot",
+                    description="Skyla - Userbot | Telethon",
+                    url="https://t.me/",
+                    thumb=InputWebDocument(
+                        INLINE_PIC,
+                        0,
+                        "image/jpeg",
+                        []),
+                    text=f"**Skyla-Userbot**\n➖➖➖➖➖➖➖➖➖➖\n✣ **ᴏᴡɴᴇʀ :** [{user.first_name}](tg://user?id={user.id})\n✣ **ᴀssɪsᴛᴀɴᴛ:** {tgbotusername}\n➖➖➖➖➖➖➖➖➖➖\n**ᴜᴘᴅᴀᴛᴇs:** @\n➖➖➖➖➖➖➖➖➖➖",
                     buttons=[
                         [
-                            custom.Button.url("ɢʀᴏᴜᴘ", "https://t.me/SkylaChats"),
                             custom.Button.url(
-                                "ʀᴇᴘᴏ", "https://github.com/Cangcimenn/Skyla-Userbot"
-                            ),
+                                "ɢʀᴏᴜᴘ",
+                                "https://t.me/SkylaChats"),
+                            custom.Button.url(
+                                "ʀᴇᴘᴏ",
+                                "https://github.com/Cangcimenn/Skyla-Userbot"),
                         ],
                     ],
                     link_preview=False,
@@ -615,25 +652,140 @@ with bot:
         )
         async def on_plug_in_callback_query_handler(event):
             if event.query.user_id == uid or event.query.user_id in SUDO_USERS:
-                current_page_number = int(event.data_match.group(1).decode("UTF-8"))
-                buttons = paginate_help(current_page_number + 1, dugmeler, "helpme")
+                current_page_number = int(
+                    event.data_match.group(1).decode("UTF-8"))
+                buttons = paginate_help(
+                    current_page_number + 1, dugmeler, "helpme")
                 await event.edit(buttons=buttons)
             else:
                 reply_pop_up_alert = (
-                    f"Kamu Tidak diizinkan, ini Userbot Milik {ALIVE_NAME}"
+                    f"Kamu Tidak diizinkan, ini Userbot Milik {owner}"
                 )
                 await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
 
-        @tgbot.on(events.callbackquery.CallbackQuery(data=re.compile(b"close")))
+        @tgbot.on(
+            events.callbackquery.CallbackQuery(  # pylint:disable=E0602
+                data=re.compile(rb"helpme_close\((.+?)\)")
+            )
+        )
         async def on_plug_in_callback_query_handler(event):
-            if event.query.user_id == uid or event.query.user_id in DEVS and SUDO_USERS:
-                openlagi = custom.Button.inline("• Re-Open Menu •", data="reopen")
+            if event.query.user_id == uid or event.query.user_id in SUDO_USERS:  # @Kyy-Userbot
+                # https://t.me/TelethonChat/115200
                 await event.edit(
-                    "⚜️ **Help Mode Button Ditutup!** ⚜️", buttons=openlagi
-                )
+                    file=kyylogo,
+                    link_preview=True,
+                    buttons=main_help_button)
+
+        @tgbot.on(
+            events.callbackquery.CallbackQuery(  # pylint:disable=E0602
+                data=re.compile(rb"gcback")
+            )
+        )
+        async def gback_handler(event):
+            if event.query.user_id == uid or event.query.user_id in SUDO_USERS:  # @Kyy-Userbot
+                # https://t.me/TelethonChat/115200
+                text = (
+                    f"**Skyla-Userbot ɪɴʟɪɴᴇ ᴍᴇɴᴜ**\n\n✣ **ᴏᴡɴᴇʀ :** [{user.first_name}](tg://user?id={user.id})\n✣ **ᴊᴜᴍʟᴀʜ** `{len(dugmeler)}` **Modules**")
+                await event.edit(
+                    text,
+                    file=kyylogo,
+                    link_preview=True,
+                    buttons=main_help_button)
+
+        @tgbot.on(events.CallbackQuery(data=b"skyla_inline"))
+        async def about(event):
+            if event.query.user_id == uid or event.query.user_id in SUDO_USERS:
+                await event.edit(f"""
+Voice chat group menu untuk {owner}
+""",
+                                 buttons=[
+                                     [
+                                         Button.inline("ᴠᴄ ᴘʟᴜɢɪɴ ⚙️",
+                                                       data="vcplugin"),
+                                         Button.inline("ᴠᴄ ᴛᴏᴏʟs ⚙️",
+                                                       data="vctools")],
+                                     [custom.Button.inline(
+                                         "ʙᴀᴄᴋ", data="gcback")],
+                                 ]
+                                 )
             else:
-                reply_pop_up_alert = f"Kamu Tidak diizinkan, ini Userbot Milik {owner}"
+                reply_pop_up_alert = f"❌ DISCLAIMER ❌\n\nAnda Tidak Mempunyai Hak Untuk Menekan Tombol Button Ini"
                 await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
+
+        @tgbot.on(
+            events.callbackquery.CallbackQuery(  # pylint:disable=E0602
+                data=re.compile(rb"vcplugin")
+            )
+        )
+        async def on_plug_in_callback_query_handler(event):
+            if event.query.user_id == uid or event.query.user_id in SUDO_USERS:
+                text = (
+                    f"""
+✘ **Commands available in vcplugin** ✘
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}play` <Judul Lagu/Link YT>
+  ↳ : Untuk Memutar Lagu di voice chat group dengan akun kamu
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}vplay` <Judul Video/Link YT>
+  ↳ : Untuk Memutar Video di voice chat group dengan akun kamu
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}end`
+  ↳ : Untuk Memberhentikan video/lagu yang sedang putar di voice chat group
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}skip`
+  ↳ : Untuk Melewati video/lagu yang sedang di putar
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}pause`
+  ↳ : Untuk memberhentikan video/lagu yang sedang diputar
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}resume`
+  ↳ : Untuk melanjutkan pemutaran video/lagu yang sedang diputar
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}volume` 1-200
+  ↳ : Untuk mengubah volume (Membutuhkan Hak admin)
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}playlist`
+  ↳ : Untuk menampilkan daftar putar Lagu/Video
+""")
+                await event.edit(
+                    text,
+                    file=kyylogo,
+                    link_preview=True,
+                    buttons=[Button.inline("ʙᴀᴄᴋ", data="skyla_inline")])
+            else:
+                reply_pop_up_alert = f"❌ DISCLAIMER ❌\n\nAnda Tidak Mempunyai Hak Untuk Menekan Tombol Button Ini"
+                await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
+
+        @tgbot.on(
+            events.callbackquery.CallbackQuery(  # pylint:disable=E0602
+                data=re.compile(rb"vctools")
+            )
+        )
+        async def on_plug_in_callback_query_handler(event):
+            if event.query.user_id == uid or event.query.user_id in SUDO_USERS:
+                text = (
+                    f"""
+✘ **Commands available in vctools** ✘
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}startvc`
+  ↳ : Untuk Memulai voice chat group
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}stopvc`
+  ↳ : Untuk Memberhentikan voice chat group
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}vctitle` <title vcg>
+  ↳ : Untuk Mengubah title/judul voice chat group
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}vcinvite`
+  ↳ : Mengundang Member group ke voice chat group
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}joinvc`
+  ↳ : Melakukan Fake voice chat group
+  𝘾𝙤𝙢𝙢𝙖𝙣𝙙 : `{cmd}leavevc`
+  ↳ : Memberhentikan Fake voice chat group
+""")
+                await event.edit(
+                    text,
+                    file=kyylogo,
+                    link_preview=True,
+                    buttons=[Button.inline("ʙᴀᴄᴋ", data="skyla_inline")])
+            else:
+                reply_pop_up_alert = f"❌ DISCLAIMER ❌\n\nAnda Tidak Mempunyai Hak Untuk Menekan Tombol Button Ini"
+                await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
+
+        @tgbot.on(events.CallbackQuery(data=b"close"))
+        async def close(event):
+            buttons = [
+                (custom.Button.inline("ᴍᴀɪɴ ᴍᴇɴᴜ", data="gcback"),),
+            ]
+            await event.edit("**ᴍᴇɴᴜ ᴅɪᴛᴜᴛᴜᴘ!**", file=kyylogo, buttons=buttons)
 
         @tgbot.on(
             events.callbackquery.CallbackQuery(
@@ -642,8 +794,10 @@ with bot:
         )
         async def on_plug_in_callback_query_handler(event):
             if event.query.user_id == uid or event.query.user_id in SUDO_USERS:
-                current_page_number = int(event.data_match.group(1).decode("UTF-8"))
-                buttons = paginate_help(current_page_number - 1, dugmeler, "helpme")
+                current_page_number = int(
+                    event.data_match.group(1).decode("UTF-8"))
+                buttons = paginate_help(
+                    current_page_number - 1, dugmeler, "helpme")
                 await event.edit(buttons=buttons)
             else:
                 reply_pop_up_alert = f"Kamu Tidak diizinkan, ini Userbot Milik {owner}"
@@ -655,39 +809,37 @@ with bot:
                 modul_name = event.data_match.group(1).decode("UTF-8")
 
                 cmdhel = str(CMD_HELP[modul_name])
-                if len(cmdhel) > 150:
+                if len(cmdhel) > 950:
                     help_string = (
                         str(CMD_HELP[modul_name])
                         .replace("`", "")
-                        .replace("**", "")[:150]
+                        .replace("**", "")[:950]
                         + "..."
                         + "\n\nBaca Teks Berikutnya Ketik .help "
                         + modul_name
                         + " "
                     )
                 else:
-                    help_string = (
-                        str(CMD_HELP[modul_name]).replace("`", "").replace("**", "")
-                    )
+                    help_string = (str(CMD_HELP[modul_name]).replace(
+                        "`", "").replace("**", ""))
 
                 reply_pop_up_alert = (
                     help_string
                     if help_string is not None
-                    else "{} No document has been written for module.".format(
+                    else "{} Tidak ada dokumen yang telah ditulis untuk modul.".format(
                         modul_name
                     )
                 )
+                await event.edit(
+                    reply_pop_up_alert, buttons=[Button.inline("ʙᴀᴄᴋ", data="reopen")]
+                )
+
             else:
-                f"🚫!WARNING!🚫 Jangan Menggunakan Milik {DEFAULTUSER} Nanti Kena Ghosting."
+                reply_pop_up_alert = f"Kamu Tidak diizinkan, ini Userbot Milik {owner}"
+                await event.answer(reply_pop_up_alert, cache_time=0, alert=True)
 
     except BaseException:
         LOGS.info(
-            "Mode Inline Bot Mu Nonaktif. "
-            "Untuk Mengaktifkannya, Silahkan Pergi Ke @BotFather Lalu, Settings Bot > Pilih Mode Inline > Turn On. ")
-    try:
-        bot.loop.run_until_complete(check_botlog_chatid())
-    except BaseException:
-        LOGS.info(
-            "BOTLOG_CHATID Environment Variable Isn't a "
-            "Valid Entity. Please Check Your Environment variables/config.env File.")
-        quit(1)
+            "Help Mode Inline Bot Mu Tidak aktif. Tidak di aktifkan juga tidak apa-apa. "
+            "Untuk Mengaktifkannya Buat bot di @BotFather Lalu Tambahkan var BOT_TOKEN dan BOT_USERNAME. "
+            "Pergi Ke @BotFather lalu settings bot » Pilih mode inline » Turn On. ")
