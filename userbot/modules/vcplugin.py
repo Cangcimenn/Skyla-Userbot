@@ -491,8 +491,8 @@ async def leavevc(event):
         await xnxx.edit("**• Berhasil Turun Dari VCG**\n `{}`".format(str(event.chat_id)))
     else:
         await edit_delete(event, f"**Maaf {owner} Tidak Berada Di VCG**")
-        
-        
+
+
 @skyla_cmd(pattern="playlist$")
 async def vc_playlist(event):
     chat_id = event.chat_id
