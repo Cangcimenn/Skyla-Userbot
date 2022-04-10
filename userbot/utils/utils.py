@@ -57,7 +57,7 @@ async def autobot():
     isdone = (await bot.get_messages(bf, limit=1))[0].text
     if isdone.startswith("That I cannot do."):
         LOGS.info(
-            "Silakan buat Bot dari @BotFather dan tambahkan tokennya di var BOT_TOKEN"
+            "✖️ **Bot Gagal Dibuat**..\n\n» Silakan buat Bot dari @BotFather dan tambahkan tokennya di var BOT_TOKEN."
         )
         sys.exit(1)
     await bot.send_message(bf, name)
@@ -69,7 +69,7 @@ async def autobot():
         isdone = (await bot.get_messages(bf, limit=1))[0].text
         if not isdone.startswith("Good."):
             LOGS.info(
-                "Silakan buat Bot dari @BotFather dan tambahkan tokennya di var BOT_TOKEN"
+                "✖️ **Bot Gagal Dibuat**..\n\n» Silakan buat Bot dari @BotFather dan tambahkan tokennya di var BOT_TOKEN."
             )
             sys.exit(1)
     await bot.send_message(bf, username)
@@ -94,28 +94,28 @@ async def autobot():
             await asyncio.sleep(1)
             await bot.send_message(bf, f"@{username}")
             await asyncio.sleep(1)
-            await bot.send_file(bf, "resources/extras/IMG_20220128_234037_279.jpg")
+            await bot.send_file(bf, "userbot/resources/extras/IMG_20220128_234037_279.jpg")
             await asyncio.sleep(3)
             await bot.send_message(bf, "/setabouttext")
             await asyncio.sleep(1)
             await bot.send_message(bf, f"@{username}")
             await asyncio.sleep(1)
-            await bot.send_message(bf, f"Managed With ☕️ By {who.first_name}")
+            await bot.send_message(bf, f"✨ Hello ✨!! I'm Assistant Bot of @{who.username}")
             await asyncio.sleep(3)
             await bot.send_message(bf, "/setdescription")
             await asyncio.sleep(1)
             await bot.send_message(bf, f"@{username}")
             await asyncio.sleep(1)
             await bot.send_message(
-                bf, f"✨ Owner ~ {who.first_name} ✨\n\n✨ Powered By ~ @ ✨"
+                bf, f"✨Powerful Rose Assistant Bot✨\n\n✨ Owner ~ @{who.username} ✨\n\n✨ Powered By ~ @SkyXBots ✨"
             )
             await bot.send_message(
                 BOTLOG_CHATID,
-                f"**BERHASIL MEMBUAT BOT TELEGRAM DENGAN USERNAME @{username}**",
+                f"✔️ **BERHASIL MEMBUAT BOT TELEGRAM DENGAN USERNAME @{username}**",
             )
             await bot.send_message(
                 BOTLOG_CHATID,
-                "**Tunggu Sebentar, Sedang MeRestart Heroku untuk Menerapkan Perubahan.**",
+                "💣 **Tunggu Sebentar, Sedang MeRestart Heroku untuk Menerapkan Perubahan.**",
             )
             rights = ChatAdminRights(
                 add_admins=False,
@@ -131,7 +131,7 @@ async def autobot():
             heroku_var["BOT_USERNAME"] = f"@{username}"
         else:
             LOGS.info(
-                "Silakan Hapus Beberapa Bot Telegram Anda di @Botfather atau Set Var BOT_TOKEN dengan token bot"
+                "🚧 Silakan Hapus Beberapa Bot Telegram Anda di @Botfather atau Set Var BOT_TOKEN dengan token bot"
             )
             sys.exit(1)
     elif isdone.startswith("Done!"):
@@ -146,28 +146,28 @@ async def autobot():
         await asyncio.sleep(1)
         await bot.send_message(bf, f"@{username}")
         await asyncio.sleep(1)
-        await bot.send_file(bf, "resources/extras/IMG_20220128_234037_279.jpg")
+        await bot.send_file(bf, "userbot/resources/extras/IMG_20220128_234037_279.jpg")
         await asyncio.sleep(3)
         await bot.send_message(bf, "/setabouttext")
         await asyncio.sleep(1)
         await bot.send_message(bf, f"@{username}")
         await asyncio.sleep(1)
-        await bot.send_message(bf, f"Managed With ☕️ By {who.first_name}")
+        await bot.send_message(bf, f"✨ Hello ✨!! I'm Assistant Bot of @{who.username}")
         await asyncio.sleep(3)
         await bot.send_message(bf, "/setdescription")
         await asyncio.sleep(1)
         await bot.send_message(bf, f"@{username}")
         await asyncio.sleep(1)
         await bot.send_message(
-            bf, f"✨ Owner ~ {who.first_name} ✨\n\n✨ Powered By ~ @ ✨"
+            bf, f"✨Powerful Rose Assistant Bot✨\n\n✨ Owner ~ @{who.username} ✨\n\n✨ Powered By ~ @SkyXBots ✨"
         )
         await bot.send_message(
             BOTLOG_CHATID,
-            f"**BERHASIL MEMBUAT BOT TELEGRAM DENGAN USERNAME @{username}**",
+            f"✔️ **BERHASIL MEMBUAT BOT TELEGRAM DENGAN USERNAME @{username}**",
         )
         await bot.send_message(
             BOTLOG_CHATID,
-            "**Tunggu Sebentar, Sedang MeRestart Heroku untuk Menerapkan Perubahan.**",
+            "💣 **Tunggu Sebentar, Sedang MeRestart Heroku untuk Menerapkan Perubahan.**",
         )
         rights = ChatAdminRights(
             add_admins=False,
@@ -183,7 +183,7 @@ async def autobot():
         heroku_var["BOT_USERNAME"] = f"@{username}"
     else:
         LOGS.info(
-            "Silakan Hapus Beberapa Bot Telegram Anda di @Botfather atau Set Var BOT_TOKEN dengan token bot"
+            "🚧 Silakan Hapus Beberapa Bot Telegram Anda di @Botfather atau Set Var BOT_TOKEN dengan token bot"
         )
         sys.exit(1)
 
