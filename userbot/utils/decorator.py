@@ -44,25 +44,25 @@ def grovy_cmd(
         args["chats"] = black_list_chats
 
     if pattern is not None:
-        global grovy_reg
+        global skyla_reg
         global sudo_reg
         if (
             pattern.startswith(r"\#")
             or not pattern.startswith(r"\#")
             and pattern.startswith(r"^")
         ):
-            grovy_reg = sudo_reg = re.compile(pattern)
+            skyla_reg = sudo_reg = re.compile(pattern)
         else:
             grovy_ = "\\" + CMD_HANDLER
             sudo_ = "\\" + SUDO_HANDLER
-            grovy_reg = re.compile(grovy_ + pattern)
+            skyla_reg = re.compile(skyla_ + pattern)
             sudo_reg = re.compile(sudo_ + pattern)
             if command is not None:
-                cmd1 = grovy_ + command
+                cmd1 = skyla_ + command
                 cmd2 = sudo_ + command
             else:
                 cmd1 = (
-                    (grovy_ +
+                    (skyla_ +
                      pattern).replace(
                         "$",
                         "").replace(
@@ -87,7 +87,7 @@ def grovy_cmd(
                 func, events.MessageEdited(
                     **args, outgoing=True, pattern=grovy_reg))
         bot.add_event_handler(
-            func, events.NewMessage(**args, outgoing=True, pattern=grovy_reg)
+            func, events.NewMessage(**args, outgoing=True, pattern=skyla_reg)
         )
         if allow_sudo:
             if not disable_edited:
