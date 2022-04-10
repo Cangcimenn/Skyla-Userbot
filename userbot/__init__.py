@@ -443,7 +443,7 @@ async def checking():
         await bot(GetSec(checker))
     except BaseException:
         pass
-    
+
 with bot:
     try:
         bot.loop.run_until_complete(checking())
@@ -656,7 +656,8 @@ with bot:
             builder = event.builder
             result = None
             query = event.text
-            if event.query.user_id == uid and query.startswith("@SkylaUserbot"):
+            if event.query.user_id == uid and query.startswith(
+                    "@SkylaUserbot"):
                 buttons = paginate_help(0, dugmeler, "helpme")
                 result = builder.photo(
                     file=kyylogo,
