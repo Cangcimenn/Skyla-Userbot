@@ -53,7 +53,7 @@ def skyla_cmd(
         ):
             skyla_reg = sudo_reg = re.compile(pattern)
         else:
-            grovy_ = "\\" + CMD_HANDLER
+            skyla_ = "\\" + CMD_HANDLER
             sudo_ = "\\" + SUDO_HANDLER
             skyla_reg = re.compile(skyla_ + pattern)
             sudo_reg = re.compile(sudo_ + pattern)
@@ -85,7 +85,7 @@ def skyla_cmd(
         if not disable_edited:
             bot.add_event_handler(
                 func, events.MessageEdited(
-                    **args, outgoing=True, pattern=grovy_reg))
+                    **args, outgoing=True, pattern=skyla_reg))
         bot.add_event_handler(
             func, events.NewMessage(**args, outgoing=True, pattern=skyla_reg)
         )
