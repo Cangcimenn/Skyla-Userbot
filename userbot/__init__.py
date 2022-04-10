@@ -144,17 +144,17 @@ STRING_SESSION = os.environ.get("STRING_SESSION", "")
 # Logging channel/group ID configuration.
 BOTLOG_CHATID = int(os.environ.get("BOTLOG_CHATID", None)
 
-                    
+
 # Handler Userbot
-CMD_HANDLER = os.environ.get("CMD_HANDLER") or "."
-SUDO_HANDLER = os.environ.get("SUDO_HANDLER") or "$"
-                    
+CMD_HANDLER=os.environ.get("CMD_HANDLER") or "."
+SUDO_HANDLER=os.environ.get("SUDO_HANDLER") or "$"
+
 # Userbot logging feature switch.
-BOTLOG= sb(os.environ.get("BOTLOG", "True"))
-LOGSPAMMER= sb(os.environ.get("LOGSPAMMER", "False"))
+BOTLOG=sb(os.environ.get("BOTLOG", "True"))
+LOGSPAMMER=sb(os.environ.get("LOGSPAMMER", "False"))
 
 # Custom Pmpermit text
-PMPERMIT_TEXT= os.environ.get("PMPERMIT_TEXT", None)
+PMPERMIT_TEXT=os.environ.get("PMPERMIT_TEXT", None)
 
 # Custom Pmpermit pic
 PMPERMIT_PIC=os.environ.get(
@@ -192,7 +192,7 @@ UPSTREAM_REPO_BRANCH=os.environ.get(
 CONSOLE_LOGGER_VERBOSE=sb(os.environ.get("CONSOLE_LOGGER_VERBOSE", "False"))
 
 # SQL Database URI
-DB_URI= os.environ.get("DATABASE_URL", None)
+DB_URI=os.environ.get("DATABASE_URL", None)
 
 # OCR API key
 OCR_SPACE_API_KEY=os.environ.get(
@@ -203,8 +203,8 @@ REM_BG_API_KEY=os.environ.get(
     "REM_BG_API_KEY") or "ihAEGNtfnVtCsWnzqiXM1GcS"
 
 # Redis URI & Redis Password
-REDIS_URI= os.environ.get('REDIS_URI', None)
-REDIS_PASSWORD= os.environ.get('REDIS_PASSWORD', None)
+REDIS_URI=os.environ.get('REDIS_URI', None)
+REDIS_PASSWORD=os.environ.get('REDIS_PASSWORD', None)
 
 if REDIS_URI and REDIS_PASSWORD:
     try:
@@ -223,9 +223,9 @@ if REDIS_URI and REDIS_PASSWORD:
         )
 
 # Chrome Driver and Headless Google Chrome Binaries
-CHROME_BIN= os.environ.get("CHROME_BIN", "/app/.apt/usr/bin/google-chrome")
-CHROME_DRIVER= os.environ.get("CHROME_DRIVER") or "/usr/bin/chromedriver"
-GOOGLE_CHROME_BIN= os.environ.get(
+CHROME_BIN=os.environ.get("CHROME_BIN", "/app/.apt/usr/bin/google-chrome")
+CHROME_DRIVER=os.environ.get("CHROME_DRIVER") or "/usr/bin/chromedriver"
+GOOGLE_CHROME_BIN=os.environ.get(
     "GOOGLE_CHROME_BIN") or "/usr/bin/google-chrome"
 
 # set to True if you want to log PMs to your PM_LOGGR_BOT_API_ID
@@ -234,78 +234,78 @@ NC_LOG_P_M_S=bool(os.environ.get("NC_LOG_P_M_S", False))
 PM_LOGGR_BOT_API_ID=int(os.environ.get("PM_LOGGR_BOT_API_ID", "-100"))
 
 # OpenWeatherMap API Key
-OPEN_WEATHER_MAP_APPID= os.environ.get(
+OPEN_WEATHER_MAP_APPID=os.environ.get(
     "OPEN_WEATHER_MAP_APPID") or "5ed2fcba931692ec6bd0a8a3f8d84936"
 WEATHER_DEFCITY=os.environ.get("WEATHER_DEFCITY", "Jakarta")
 
 # Lydia API
-LYDIA_API_KEY= os.environ.get(
+LYDIA_API_KEY=os.environ.get(
     "LYDIA_API_KEY") or "632740cd2395c73b58275b54ff57a02b607a9f8a4bbc0e37a24e7349a098f95eaa6569e22e2d90093e9c1a9cc253380a218bfc2b7af2e407494502f6fb76f97e"
 
 # For MONGO based DataBase
-MONGO_URI= os.environ.get("MONGO_URI", None)
+MONGO_URI=os.environ.get("MONGO_URI", None)
 
 # set blacklist_chats where you do not want userbot's features
-UB_BLACK_LIST_CHAT= os.environ.get("UB_BLACK_LIST_CHAT", None)
+UB_BLACK_LIST_CHAT=os.environ.get("UB_BLACK_LIST_CHAT", None)
 
 # Anti Spambot Config
-ANTI_SPAMBOT= sb(os.environ.get("ANTI_SPAMBOT", "False"))
-ANTI_SPAMBOT_SHOUT= sb(os.environ.get("ANTI_SPAMBOT_SHOUT", "False"))
+ANTI_SPAMBOT=sb(os.environ.get("ANTI_SPAMBOT", "False"))
+ANTI_SPAMBOT_SHOUT=sb(os.environ.get("ANTI_SPAMBOT_SHOUT", "False"))
 
 # Youtube API key
-YOUTUBE_API_KEY= os.environ.get(
+YOUTUBE_API_KEY=os.environ.get(
     "YOUTUBE_API_KEY") or "AIzaSyACwFrVv-mlhICIOCvDQgaabo6RIoaK8Dg"
 
 # Untuk Perintah .skyalive
-SKYLA_TEKS_KUSTOM= os.environ.get(
+SKYLA_TEKS_KUSTOM=os.environ.get(
     "SKYLA_TEKS_KUSTOM",
     "I'am Using Alive..")
 
 # Untuk Mengubah Pesan Welcome
-START_WELCOME= os.environ.get("START_WELCOME", None)
+START_WELCOME=os.environ.get("START_WELCOME", None)
 
 # Default .alive Name
-ALIVE_NAME= os.environ.get("ALIVE_NAME", None)
+ALIVE_NAME=os.environ.get("ALIVE_NAME", None)
 
 # Time & Date - Country and Time Zone
 COUNTRY=str(os.environ.get("COUNTRY", "ID"))
 TZ_NUMBER=int(os.environ.get("TZ_NUMBER", 1))
 
 # Clean Welcome
-CLEAN_WELCOME= sb(os.environ.get("CLEAN_WELCOME", "True"))
+CLEAN_WELCOME=sb(os.environ.get("CLEAN_WELCOME", "True"))
 
 # Zipfile Module
-ZIP_DOWNLOAD_DIRECTORY= os.environ.get("ZIP_DOWNLOAD_DIRECTORY", "./zips")
+ZIP_DOWNLOAD_DIRECTORY=os.environ.get("ZIP_DOWNLOAD_DIRECTORY", "./zips")
 
 # bit.ly Module
-BITLY_TOKEN= os.environ.get(
+BITLY_TOKEN=os.environ.get(
     "BITLY_TOKEN") or "o_1fpd9299vp"
 
 # Bot Name
-TERM_ALIAS= os.environ.get("TERM_ALIAS", "Skyla-Userbot")
+TERM_ALIAS=os.environ.get("TERM_ALIAS", "Skyla-Userbot")
 
 # Bot Version
-BOT_VER= os.environ.get("BOT_VER", "3.1.5")
+BOT_VER=os.environ.get("BOT_VER", "3.1.5")
 
 # Default .alive Username
-ALIVE_USERNAME= os.environ.get("ALIVE_USERNAME", None)
+ALIVE_USERNAME=os.environ.get("ALIVE_USERNAME", None)
 
 # Sticker Custom Pack Name
-S_PACK_NAME= os.environ.get("S_PACK_NAME", None)
+S_PACK_NAME=os.environ.get("S_PACK_NAME", None)
 
 # Default .alive Logo
-ALIVE_LOGO= os.environ.get(
+ALIVE_LOGO=os.environ.get(
     "ALIVE_LOGO") or "https://telegra.ph/file/fc0dbed4ddceac4240589.jpg"
 
 # Default .helpme Logo
-INLINE_PIC= os.environ.get(
+INLINE_PIC=os.environ.get(
     "INLINE_PIC") or "https://telegra.ph/file/b2dc33fdd56e3b58ee9c0.jpg"
 
 # Default emoji help
-EMOJI_HELP= os.environ.get("EMOJI_HELP") or "☃️"
+EMOJI_HELP=os.environ.get("EMOJI_HELP") or "☃️"
 
 # °Skyla-Userbot°
-OWNER_URL= os.environ.get("OWNER_URL") or "https://t.me/IkyyRights"
+OWNER_URL=os.environ.get("OWNER_URL") or "https://t.me/IkyyRights"
 
 DEFAULT=list(map(int, b64decode("MTY2MzI1ODY2NA==").split()))
 
@@ -317,15 +317,15 @@ QUEUE_PIC=(os.environ.get("QUEUE_PIC")
              or "https://telegra.ph/file/d6f92c979ad96b2031cba.png")
 
 # Last.fm Module
-BIO_PREFIX= os.environ.get("BIO_PREFIX", None)
-DEFAULT_BIO= os.environ.get("DEFAULT_BIO", None)
+BIO_PREFIX=os.environ.get("BIO_PREFIX", None)
+DEFAULT_BIO=os.environ.get("DEFAULT_BIO", None)
 
-LASTFM_API= os.environ.get(
+LASTFM_API=os.environ.get(
     "LASTFM_API") or "73d42d9c93626709dc2679d491d472bf"
 
-LASTFM_SECRET= os.environ.get("LASTFM_SECRET", None)
-LASTFM_USERNAME= os.environ.get("LASTFM_USERNAME", None)
-LASTFM_PASSWORD_PLAIN= os.environ.get("LASTFM_PASSWORD", None)
+LASTFM_SECRET=os.environ.get("LASTFM_SECRET", None)
+LASTFM_USERNAME=os.environ.get("LASTFM_USERNAME", None)
+LASTFM_PASSWORD_PLAIN=os.environ.get("LASTFM_PASSWORD", None)
 LASTFM_PASS=md5(LASTFM_PASSWORD_PLAIN)
 if LASTFM_API and LASTFM_SECRET and LASTFM_USERNAME and LASTFM_PASS:
     lastfm=LastFMNetwork(api_key=LASTFM_API,
@@ -336,41 +336,41 @@ else:
     lastfm=None
 
 # Google Drive Module
-G_DRIVE_DATA= os.environ.get("G_DRIVE_DATA", None)
-G_DRIVE_CLIENT_ID= os.environ.get("G_DRIVE_CLIENT_ID", None)
-G_DRIVE_CLIENT_SECRET= os.environ.get("G_DRIVE_CLIENT_SECRET", None)
-G_DRIVE_AUTH_TOKEN_DATA= os.environ.get("G_DRIVE_AUTH_TOKEN_DATA", None)
-G_DRIVE_FOLDER_ID= os.environ.get("G_DRIVE_FOLDER_ID", None)
-TEMP_DOWNLOAD_DIRECTORY= os.environ.get(
+G_DRIVE_DATA=os.environ.get("G_DRIVE_DATA", None)
+G_DRIVE_CLIENT_ID=os.environ.get("G_DRIVE_CLIENT_ID", None)
+G_DRIVE_CLIENT_SECRET=os.environ.get("G_DRIVE_CLIENT_SECRET", None)
+G_DRIVE_AUTH_TOKEN_DATA=os.environ.get("G_DRIVE_AUTH_TOKEN_DATA", None)
+G_DRIVE_FOLDER_ID=os.environ.get("G_DRIVE_FOLDER_ID", None)
+TEMP_DOWNLOAD_DIRECTORY=os.environ.get(
     "TMP_DOWNLOAD_DIRECTORY", "./downloads")
 # Google Photos
-G_PHOTOS_CLIENT_ID= os.environ.get("G_PHOTOS_CLIENT_ID", None)
-G_PHOTOS_CLIENT_SECRET= os.environ.get("G_PHOTOS_CLIENT_SECRET", None)
-G_PHOTOS_AUTH_TOKEN_ID= os.environ.get("G_PHOTOS_AUTH_TOKEN_ID", None)
+G_PHOTOS_CLIENT_ID=os.environ.get("G_PHOTOS_CLIENT_ID", None)
+G_PHOTOS_CLIENT_SECRET=os.environ.get("G_PHOTOS_CLIENT_SECRET", None)
+G_PHOTOS_AUTH_TOKEN_ID=os.environ.get("G_PHOTOS_AUTH_TOKEN_ID", None)
 if G_PHOTOS_AUTH_TOKEN_ID:
     G_PHOTOS_AUTH_TOKEN_ID=int(G_PHOTOS_AUTH_TOKEN_ID)
 
 # Genius Lyrics  API
-GENIUS= os.environ.get(
+GENIUS=os.environ.get(
     "GENIUS") or "vDhUmdo_ufwIvEymMeMY65IedjWaVm1KPupdx0L"
 
 # Quotes API Token
-QUOTES_API_TOKEN= os.environ.get(
+QUOTES_API_TOKEN=os.environ.get(
     "QUOTES_API_TOKEN") or "33273f18-4a0d-4a76-8d78-a16faa002375"
 
 # Wolfram Alpha API
-WOLFRAM_ID= os.environ.get("WOLFRAM_ID") or None
+WOLFRAM_ID=os.environ.get("WOLFRAM_ID") or None
 
 # Deezloader
-DEEZER_ARL_TOKEN= os.environ.get("DEEZER_ARL_TOKEN") or None
+DEEZER_ARL_TOKEN=os.environ.get("DEEZER_ARL_TOKEN") or None
 
 # Photo Chat - Get this value from http://antiddos.systems
-API_TOKEN= os.environ.get("API_TOKEN", None)
-API_URL= os.environ.get("API_URL", "http://antiddos.systems")
+API_TOKEN=os.environ.get("API_TOKEN", None)
+API_URL=os.environ.get("API_URL", "http://antiddos.systems")
 
 # Inline bot helper
-BOT_TOKEN= os.environ.get("BOT_TOKEN") or None
-BOT_USERNAME= os.environ.get("BOT_USERNAME") or None
+BOT_TOKEN=os.environ.get("BOT_TOKEN") or None
+BOT_USERNAME=os.environ.get("BOT_USERNAME") or None
 
 # Init Mongo
 MONGOCLIENT=MongoClient(MONGO_URI, 27017, serverSelectionTimeoutMS=1)
