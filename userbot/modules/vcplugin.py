@@ -495,8 +495,8 @@ async def leavevc(event):
         await xnxx.edit("**• Berhasil Turun Dari VCG**\n `{}`".format(str(event.chat_id)))
     else:
         await edit_delete(event, f"**Maaf {owner} Tidak Berada Di VCG**")
-        
-        
+
+
 @skyla_cmd(pattern="playlist$")
 async def vc_playlist(event):
     chat_id = event.chat_id
@@ -520,8 +520,8 @@ async def vc_playlist(event):
             await edit_or_reply(event, PLAYLIST, link_preview=False)
     else:
         await edit_delete(event, "**Tidak Sedang Memutar Streaming**")
-        
-        
+
+
 @call_py.on_stream_end()
 async def stream_end_handler(_, u: Update):
     chat_id = u.chat_id
