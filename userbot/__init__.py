@@ -147,10 +147,10 @@ BOTLOG_CHATID = int(os.environ.get("BOTLOG_CHATID", None)
 # Userbot logging feature switch.
 BOTLOG=sb(os.environ.get("BOTLOG", "True"))
 LOGSPAMMER=sb(os.environ.get("LOGSPAMMER", "False"))
-                    
+
 # Handler Userbot
-CMD_HANDLER= os.environ.get("CMD_HANDLER") or "."
-SUDO_HANDLER= os.environ.get("SUDO_HANDLER") or "$"                    
+CMD_HANDLER=os.environ.get("CMD_HANDLER") or "."
+SUDO_HANDLER=os.environ.get("SUDO_HANDLER") or "$"
 
 # Custom Pmpermit text
 PMPERMIT_TEXT=os.environ.get("PMPERMIT_TEXT", None)
