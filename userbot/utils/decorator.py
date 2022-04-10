@@ -21,7 +21,7 @@ from userbot import (
 )
 
 
-def grovy_cmd(
+def skyla_cmd(
     pattern: str = None,
     allow_sudo: bool = True,
     disable_edited: bool = False,
