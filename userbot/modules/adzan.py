@@ -12,7 +12,7 @@ from userbot.modules.sql_helper.globals import gvarstatus
 from userbot.utils import edit_delete, edit_or_reply, skyla_cmd
 
 
-@  # ported from uniborg
+# ported from uniborg
 # https://github.com/muhammedfurkan/UniBorg/blob/master/stdplugins/ezanvakti.py
 @skyla_cmd(pattern="adzan(?:\\s|$)([\\s\\S]*)")
 async def get_adzan(adzan):
