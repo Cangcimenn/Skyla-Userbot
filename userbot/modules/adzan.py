@@ -1,7 +1,7 @@
 # ported from uniborg
 # https://github.com/muhammedfurkan/UniBorg/blob/master/stdplugins/ezanvakti.py
 
-from userbot.utils import edit_delete, edit_or_reply, grovy_cmd
+from userbot.utils import edit_delete, edit_or_reply
 import json
 
 import requests
