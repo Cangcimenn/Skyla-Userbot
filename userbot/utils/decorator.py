@@ -112,7 +112,7 @@ def skyla_cmd(
     return decorator
 
 
-def grovy_handler(
+def skyla_handler(
     **args,
 ):
     def decorator(func):
