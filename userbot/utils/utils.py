@@ -107,7 +107,7 @@ async def autobot():
             await bot.send_message(bf, f"@{username}")
             await asyncio.sleep(1)
             await bot.send_message(
-                bf, f"✨Powerful Rose Assistant Bot✨\n\n✨ Owner ~ @{who.username} ✨\n\n✨ Powered By ~ @SkyXBots ✨"
+                bf, f"✨Powerful Skyla Assistant Bot✨\n\n✨ Owner ~ @{who.username} ✨\n\n✨ Powered By ~ @SkyXBots ✨"
             )
             await bot.send_message(
                 BOTLOG_CHATID,
@@ -159,7 +159,7 @@ async def autobot():
         await bot.send_message(bf, f"@{username}")
         await asyncio.sleep(1)
         await bot.send_message(
-            bf, f"✨Powerful Rose Assistant Bot✨\n\n✨ Owner ~ @{who.username} ✨\n\n✨ Powered By ~ @SkyXBots ✨"
+            bf, f"✨Powerful Skyla Assistant Bot✨\n\n✨ Owner ~ @{who.username} ✨\n\n✨ Powered By ~ @SkyXBots ✨"
         )
         await bot.send_message(
             BOTLOG_CHATID,
