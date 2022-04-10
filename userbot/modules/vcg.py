@@ -7,10 +7,12 @@ from telethon.tl.functions.phone import CreateGroupCallRequest as startvc
 from telethon.tl.functions.phone import DiscardGroupCallRequest as stopvc
 from telethon.tl.functions.phone import GetGroupCallRequest as getvc
 from telethon.tl.functions.phone import InviteToGroupCallRequest as invitetovc
+from telethon.tl.functions.phone import EditGroupCallTitleRequest as settitle
 
 from telethon.tl import types
 from telethon.utils import get_display_name
 
+from userbot import owner
 from userbot import CMD_HELP, CMD_HANDLER as cmd
 from userbot.utils import edit_delete, edit_or_reply, skyla_cmd
 from userbot.events import register
@@ -25,9 +27,9 @@ def vcmention(user):
     return f"[{full_name}](tg://user?id={user.id})"
 
 
-async def get_call(grovy):
-    grovy = await grovy.client(getchat(grovy.chat_id))
-    await grovy.client(getvc(grovy.full_chat.call, limit=1))
+async def get_call(skyla):
+    skylam = await skyla.client(getchat(skyla.chat_id))
+    hehe = await skyla.client(getvc(skylam.full_chat.call, limit=1))
     return hehe.call
 
 
@@ -44,7 +46,7 @@ async def start_voice(c):
     creator = chat.creator
 
     if not admin and not creator:
-        await edit_delete(c, f"**Maaf {ALIVE_NAME} Bukan Admin 👮**")
+        await edit_delete(c, f"**Maaf {owner} Bukan Admin 👮**")
         return
     try:
         await c.client(startvc(c.chat_id))
@@ -61,7 +63,7 @@ async def stop_voice(c):
     creator = chat.creator
 
     if not admin and not creator:
-        await edit_delete(c, f"**Maaf {ALIVE_NAME} Bukan Admin 👮**")
+        await edit_delete(c, f"**Maaf {owner} Bukan Admin 👮**")
         return
     try:
         await c.client(stopvc(await get_call(c)))
@@ -71,21 +73,21 @@ async def stop_voice(c):
 
 
 @skyla_cmd(pattern="vcinvite")
-async def _(grovy):
-    await edit_or_reply(grovy, "`Sedang Menginvite Member...`")
+async def _(skyla):
+    await edit_or_reply(skyla, "`Sedang Menginvite Member...`")
     users = []
     z = 0
-    async for x in grovy.client.iter_participants(grovy.chat_id):
+    async for x in skyla.client.iter_participants(skyla.chat_id):
         if not x.bot:
             users.append(x.id)
     hmm = list(user_list(users, 6))
     for p in hmm:
         try:
-            await grovy.client(invitetovc(call=await get_call(grovy), users=p))
+            await skyla.client(invitetovc(call=await get_call(skyla), users=p))
             z += 6
         except BaseException:
             pass
-    await edit_or_reply(grovy, f"`Menginvite {z} Member`")
+    await edit_or_reply(skyla, f"`Menginvite {z} Member`")
 
 
 @skyla_cmd(pattern="vctitle(?: |$)(.*)")
