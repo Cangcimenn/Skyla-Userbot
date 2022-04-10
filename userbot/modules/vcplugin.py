@@ -14,6 +14,7 @@ from pytgcalls.types.input_stream.quality import (
 )
 from telethon.tl import types
 from telethon.utils import get_display_name
+from telethon.tl.functions.users import GetFullUserRequest
 from youtubesearchpython import VideosSearch
 
 from userbot import CMD_HANDLER as cmd
@@ -445,6 +446,53 @@ async def vc_volume(event):
         await edit_delete(event, "**Tidak Sedang Memutar Streaming**")
 
 
+# credits by @vckyaz < vicky \>
+# FROM GeezProjects < https://github.com/vckyou/GeezProjects \>
+# ambil boleh apus credits jangan ya ka:)
+
+@skyla_cmd(pattern="joinvc(?: |$)(.*)")
+async def join_(event):
+    xnxx = await edit_or_reply(event, f"**otw Naik**")
+    if len(event.text.split()) > 1:
+        chat = event.text.split()[1]
+        try:
+            chat = await event.client(GetFullUserRequest(chat))
+        except Exception as e:
+            await edit_delete(event, f"**ERROR:** `{e}`", 30)
+    else:
+        chat = event.chat_id
+        vcmention(event.sender)
+    if not call_py.is_connected:
+        await call_py.start()
+    await call_py.join_group_call(
+        chat,
+        AudioPiped(
+            'http://duramecho.com/Misc/SilentCd/Silence01s.mp3'
+        ),
+        stream_type=StreamType().pulse_stream,
+    )
+    try:
+        await xnxx.edit("**{} • Berhasil Naik Di VCG**\n `{}`".format(owner, str(event.chat_id)))
+    except Exception as ex:
+        await edit_delete(event, f"**ERROR:** `{ex}`")
+
+
+@skyla_cmd(pattern="leavevc(?: |$)(.*)")
+async def leavevc(event):
+    """ leave video chat """
+    xnxx = await edit_or_reply(event, "Turun Dulu..")
+    chat_id = event.chat_id
+    from_user = vcmention(event.sender)
+    if from_user:
+        try:
+            await call_py.leave_group_call(chat_id)
+        except (NotInGroupCallError, NoActiveGroupCall):
+            pass
+        await xnxx.edit("**• Berhasil Turun Dari VCG**\n `{}`".format(str(event.chat_id)))
+    else:
+        await edit_delete(event, f"**Maaf {owner} Tidak Berada Di VCG**")
+        
+        
 @skyla_cmd(pattern="playlist$")
 async def vc_playlist(event):
     chat_id = event.chat_id
@@ -515,5 +563,16 @@ CMD_HELP.update(
         \n\n  •  **Syntax :** `{cmd}playlist`\
         \n  •  **Function : **Untuk menampilkan daftar putar Lagu/Video\
     "
+    }
+)
+
+CMD_HELP.update(
+    {
+        "vctools": f"**Plugin : **`vctools`\
+      \n\n  •  **Syntax :** `{cmd}joinvc`\
+      \n  •  **Function :** Melakukan Fake voice chat group.\
+      \n\n  •  **Syntax :** `{cmd}leavevc`\
+      \n  •  **Function :** Memberhentikan Fake voice chat group.\
+      "
     }
 )
