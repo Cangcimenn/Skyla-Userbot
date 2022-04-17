@@ -3,8 +3,8 @@ from time import sleep
 
 from telethon import events
 
-from userbot import CMD_HELP, bot, CMD_HANDLER as cmd
-from userbot.utils import edit_or_reply, skyla_cmd
+from userbot import CMD_HELP, bot
+from userbot.utils import skyla_cmd
 
 
 @skyla_cmd(pattern="sayang$")
